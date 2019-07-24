@@ -33,7 +33,7 @@ public class Commands implements CommandExecutor {
                     }
                     String chooseCommand = pvpInvite.chooseCommand.replaceAll("%player%",player.getDisplayName());
                     pvpInvite.send(target, pvpInvite.invite.replaceAll("%player%", player.getDisplayName()).split("%NEWLINE%"));
-                    pvpInvite.sendChoose(target,chooseCommand.split(","),pvpInvite.chooseString.split(","));
+                    pvpInvite.sendChoose(target,chooseCommand.split(","),new String[]{pvpInvite.choose_accept,pvpInvite.choose_deny});
                     pvpPlayer = new PvPPlayer(player.getUniqueId());
                     //pvpInvite.pvpPlayer = new PvPPlayer(player.getUniqueId());
                 }else if(args[0].equalsIgnoreCase("Accept")){//Accept
