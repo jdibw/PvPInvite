@@ -20,7 +20,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
     private PvPPlayer pvpPlayer;
     public static ArrayList<UUID> pvpers = new ArrayList<>();
     public static HashMap<UUID, UUID> invites = new HashMap<>();
-    String need_invite, wait_for_accept,invite,chooseString;
+    String need_invite, wait_for_accept,invite,chooseString, accept, deny, ;
 
     @Override
     public void onEnable() {
