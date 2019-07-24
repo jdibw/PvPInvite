@@ -35,14 +35,7 @@ public class Commands implements CommandExecutor {
                     pvpInvite.sendChoose(target,chooseString.split(","),"[同意],[拒絕]".split(","));
                     pvpInvite.pvpPlayer = new PvPPlayer(player.getUniqueId());
                 }else if(args[0].equalsIgnoreCase("Accept")){//Accept
-                    pvpInvite.pvpPlayer.addOpponent(target.getUniqueId());
-                    try {
-                        sendStartPVP((Player)sender,target);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 }else if(args[0].equalsIgnoreCase("Deny")){//Deny
-                    sender.sendMessage("Deny Invite");
                 }
             }
             return true;
@@ -50,20 +43,24 @@ public class Commands implements CommandExecutor {
         return false;
     }
 
-    private void sendStartPVP(final Player sender, final Player target) throws InterruptedException {
-
-        for(int i = 3 ; i > 0 ; i--){
-            String title = "決鬥將在" + i + "秒後開始！！！";
-            sender.sendTitle(title,"",0,20,0);
-            target.sendTitle(title,"",0,20,0);
-            Thread.sleep(1000);
+    private void sendStartPVP(Player sender, Player target) {
+        Integer delay = 0;
+        for(int i = 3 ; i > 0 ; i--) {
+            Integer I = i;
+            Bukkit.getScheduler().runTaskLater(pvpInvite, new Runnable() {
+                @Override
+                public void run() {
+                    String title = "決鬥將在" + I + "秒後開始！！！";
+                    sender.sendTitle(title,"",0,20,0);
+                    target.sendTitle(title,"",0,20,0);
+                }
+            }, delay*20L);
+            delay++;
         }
-        sender.sendTitle("","",0,20,0);
-        target.sendTitle("","",0,20,0);
     }
 
-    private void sendEndPVP(final Player sender, final Player target, final String name) {
-        String title =
+    private void sendEndPVP(Player sender, Player target, String name) {
+        String title = PvPInvite.pvpEnd;
         sender.sendTitle(title,"",0,60,0);
         target.sendTitle(title,"",0,60,0);
     }

@@ -21,7 +21,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
     public static ArrayList<UUID> pvpers = new ArrayList<>();
     public static HashMap<UUID, UUID> invites = new HashMap<>();
 
-    public static String need_invite, wait_for_accept,invite,chooseString, accept,deny,chooseCommand,pvpStart,pvpEnd;
+    public static String need_invite, wait_for_accept,invite,chooseString, accept,deny,choose_accept, choose_deny,pvpStart,pvpEnd;
 
 
     @Override
@@ -33,7 +33,8 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         accept = translateAlternateColorCodes('&', getConfig().getString("messages.Accept"));
         deny = translateAlternateColorCodes('&', getConfig().getString("messages.Deny"));
         chooseString = translateAlternateColorCodes('&', getConfig().getString("messages.ChooseString"));
-        chooseCommand = translateAlternateColorCodes('&', getConfig().getString("messages.ChooseCommand"));
+        choose_accept = translateAlternateColorCodes('&', getConfig().getString("messages.ChooseAccept"));
+        choose_deny= translateAlternateColorCodes('&', getConfig().getString("messages.ChooseDeny"));
         pvpStart = translateAlternateColorCodes('&', getConfig().getString("messages.PVPStart"));
         pvpEnd = translateAlternateColorCodes('&', getConfig().getString("messages.PVPEnd"));
 
