@@ -7,10 +7,8 @@ commands:
   pvp:
     description: PVP command.
     usage: /pvp [Invite|Accept|Deny] [player]
-    permission: PvPInvite.pvp
-    permission-message: You don't have permission to use this command.
 
-permission:
+permissions:
   PvPInvite.pvp:
     description: This is a pvp command.
     default: true
