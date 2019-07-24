@@ -7,6 +7,7 @@ import java.util.UUID;
 public class PvPPlayer {
 
     UUID uuid;
+    boolean pvping = false;
     public ArrayList<UUID> opponents = new ArrayList<>();
 
     public PvPPlayer(UUID uuid){
