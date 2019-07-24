@@ -330,6 +330,7 @@
       </state>
       <state key="FacetStructureConfigurable.UI">
         <settings>
+          <last-edited>Minecraft (PvPInvite)|Minecraft</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -363,7 +364,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>main</last-edited>
+          <last-edited>PvPInvite</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -387,7 +388,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>spigot-api-1.14.3-pre4-20190621.102722-1-shaded</last-edited>
+          <last-edited>Maven: org.spigotmc:spigot-api:1.14.2-R0.1-SNAPSHOT</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
