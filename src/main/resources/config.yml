@@ -5,4 +5,7 @@
       Need_Invite: "&6請先使用蹲下+左鍵發送對決邀請!"
       Wait_for_Accept: "&6已寄送邀請給 &b%player% &6正在等待他的回覆"
       Invite: "&b%player% &6邀請你進行決鬥"
-      ChooseString: "/pvp Accept %player%,/pvp Deny %player%"
+      Accept: "&6你同意了 &b%player% &b的決鬥邀請"
+      Deny: "&6你拒絕了 &b%player% &b的決鬥邀請"
+      ChooseString: "[同意],[拒絕]"
+      ChooseCommand: "/pvp Accept %player%,/pvp Deny %player%"

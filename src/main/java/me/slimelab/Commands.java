@@ -11,7 +11,7 @@ import java.lang.*;
 import java.util.UUID;
 
 public class Commands implements CommandExecutor {
-    private PvPPlayer pvpPlayer;
+
     private final PvPInvite pvpInvite;
     public Commands(PvPInvite pvpInvite ) {
         this.pvpInvite = pvpInvite;
@@ -40,15 +40,18 @@ public class Commands implements CommandExecutor {
                     String chooseString = pvpInvite.chooseString.replaceAll("%player%",player.getDisplayName());
                     pvpInvite.send(target, pvpInvite.invite.replaceAll("%player%", player.getDisplayName()).split("%NEWLINE%"));
                     pvpInvite.sendChoose(target,chooseString.split(","),"[同意],[拒絕]".split(","));
-                    pvpPlayer = new PvPPlayer(player.getUniqueId());
+                    pvpInvite.pvpPlayer = new PvPPlayer(player.getUniqueId());
                 }else if(args[0].equalsIgnoreCase("Accept")){//Accept
-                    sender.sendMessage("Accept Invite");
-                    target.sendMessage("Accept Invite");
-                    pvpPlayer.addOpponent(target.getUniqueId());
+                    pvpInvite.pvpPlayer.addOpponent(target.getUniqueId());
+                    try {
+                        sendStartPVP((Player)sender,target);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }else if(args[0].equalsIgnoreCase("Deny")){//Deny
                     sender.sendMessage("Deny Invite");
                     target.sendMessage("Deny Invite");
-                    pvpPlayer.removeOpponent(player.getUniqueId());
+                    pvpInvite.pvpPlayer.removeOpponent(player.getUniqueId());
                 }
             }
             return true;

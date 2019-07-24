@@ -17,10 +17,10 @@ import static org.bukkit.ChatColor.*;
 
 public final class PvPInvite extends JavaPlugin implements Listener {
 
-    private PvPPlayer pvpPlayer;
+    public PvPPlayer pvpPlayer;
     public static ArrayList<UUID> pvpers = new ArrayList<>();
     public static HashMap<UUID, UUID> invites = new HashMap<>();
-    String need_invite, wait_for_accept,invite,chooseString;
+    String need_invite, wait_for_accept,invite,accept,deny,chooseString,chooseCommand;
 
     @Override
     public void onEnable() {
@@ -28,7 +28,11 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         need_invite = translateAlternateColorCodes('&', getConfig().getString("messages.Need_Invite"));
         wait_for_accept = translateAlternateColorCodes('&', getConfig().getString("messages.Wait_for_Accept"));
         invite = translateAlternateColorCodes('&', getConfig().getString("messages.Invite"));
+        accept = translateAlternateColorCodes('&', getConfig().getString("messages.Accept"));
+        deny = translateAlternateColorCodes('&', getConfig().getString("messages.Deny"));
         chooseString = translateAlternateColorCodes('&', getConfig().getString("messages.ChooseString"));
+        chooseCommand = translateAlternateColorCodes('&', getConfig().getString("messages.ChooseCommand"));
+
         getServer().getPluginManager().registerEvents(this, this);
         getCommand("pvp").setExecutor(new Commands(this));
     }
