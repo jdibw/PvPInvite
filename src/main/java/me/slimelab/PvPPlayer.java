@@ -7,7 +7,7 @@ import java.util.UUID;
 public class PvPPlayer {
 
     UUID uuid;
-    ArrayList<UUID> opponents = new ArrayList<>();
+    public ArrayList<UUID> opponents = new ArrayList<>();
 
     public PvPPlayer(UUID uuid){
         this.uuid = uuid;

@@ -3,6 +3,7 @@ package me.slimelab;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.*;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,7 +22,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
     public static ArrayList<UUID> pvpers = new ArrayList<>();
     public static HashMap<UUID, UUID> invites = new HashMap<>();
 
-    public static String need_invite, wait_for_accept,invite,chooseString, accept,deny,chooseCommand,pvpStart,pvpEnd;
+    public static String need_invite, wait_for_accept,invite,accept,acceptTo,deny,denyTo,chooseString,chooseCommand,pvpStart,pvpEnd;
 
 
     @Override
@@ -32,6 +33,8 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         invite = translateAlternateColorCodes('&', getConfig().getString("messages.Invite"));
         accept = translateAlternateColorCodes('&', getConfig().getString("messages.Accept"));
         deny = translateAlternateColorCodes('&', getConfig().getString("messages.Deny"));
+        acceptTo = translateAlternateColorCodes('&', getConfig().getString("messages.AcceptTo"));
+        denyTo = translateAlternateColorCodes('&', getConfig().getString("messages.DenyTo"));
         chooseString = translateAlternateColorCodes('&', getConfig().getString("messages.ChooseString"));
         chooseCommand = translateAlternateColorCodes('&', getConfig().getString("messages.ChooseCommand"));
         pvpStart = translateAlternateColorCodes('&', getConfig().getString("messages.PVPStart"));
@@ -56,7 +59,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                     e.setCancelled(true);
                     damager.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(wait_for_accept.replaceAll("%player%", damagee.getDisplayName())));
                     send(damagee, invite.replaceAll("%player%", damager.getDisplayName()).split("%NEWLINE%"));
-                    sendChoose(damagee,chooseString.replaceAll("%player%",damager.getDisplayName()).split(","),"[同意],[拒絕]".split(","));
+                    sendChoose(damagee,chooseCommand.replaceAll("%player%",damager.getDisplayName()).split(","),chooseString.split(","));
                 }else {
                     e.setCancelled(true);
                     damager.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(need_invite.replaceAll("%player%", damagee.getDisplayName())));
