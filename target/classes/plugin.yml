@@ -1,0 +1,16 @@
+name: PvPInvite
+version: 1.0
+main: me.slimelab.PvPInvite
+api-version: 1.14
+authors: [coco0325, jdibw]
+commands:
+  pvp:
+    description: This is a pvp command.
+    usage: /pvp <Invite/Accept/Deny> [player]
+    permission: PvPInvite.pvp
+    permission-message: You don't have permission to use this command.
+
+permission:
+  PvPInvite.pvp:
+    description: This is a pvp command.
+    default: true

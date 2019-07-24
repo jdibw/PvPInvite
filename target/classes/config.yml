@@ -1,0 +1,8 @@
+## PvP-Invite System by SlimeLab MC Server
+
+    messages:
+      # Placeholder %player%
+      Need_Invite: "&6請先使用蹲下+左鍵發送對決邀請!"
+      Wait_for_Accept: "&6已寄送邀請給 &b%player% &6正在等待他的回覆"
+      Invite: "&b%player% &6邀請你進行決鬥"
+      ChooseString: "/pvp Accept %player%,/pvp Deny %player%"
