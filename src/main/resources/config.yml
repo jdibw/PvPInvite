@@ -9,3 +9,5 @@
       Deny: "&6你拒絕了 &b%player% &b的決鬥邀請"
       ChooseString: "[同意],[拒絕]"
       ChooseCommand: "/pvp Accept %player%,/pvp Deny %player%"
+      PVPStart: "&6決鬥將在%sec%秒後開始！！！"
+      PVPEnd: "&6決鬥結束，獲勝者 &b%palyer%"
