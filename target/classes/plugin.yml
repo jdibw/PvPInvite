@@ -5,12 +5,15 @@ api-version: 1.14
 authors: [coco0325, jdibw]
 commands:
   pvp:
-    description: This is a pvp command.
-    usage: /pvp <Invite/Accept/Deny> [player]
-    permission: PvPInvite.pvp
-    permission-message: You don't have permission to use this command.
+    description: PVP command.
+    usage: /pvp [Invite|Accept|Deny] [player]
 
-permission:
+permissions:
   PvPInvite.pvp:
     description: This is a pvp command.
     default: true
+  PvPInvite.*:
+    description: Wildcard permission
+    default: op
+    children:
+      PvPInvite.pvp: true
