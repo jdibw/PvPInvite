@@ -11,7 +11,7 @@ import java.lang.*;
 import java.util.UUID;
 
 public class Commands implements CommandExecutor {
-    private PvPPlayer pvpPlayer;
+
     private final PvPInvite pvpInvite;
     public Commands(PvPInvite pvpInvite ) {
         this.pvpInvite = pvpInvite;
@@ -34,26 +34,26 @@ public class Commands implements CommandExecutor {
                     String chooseCommand = pvpInvite.chooseCommand.replaceAll("%player%",player.getDisplayName());
                     pvpInvite.send(target, pvpInvite.invite.replaceAll("%player%", player.getDisplayName()).split("%NEWLINE%"));
                     pvpInvite.sendChoose(target,chooseCommand.split(","),new String[]{pvpInvite.choose_accept,pvpInvite.choose_deny});
-                    pvpPlayer = new PvPPlayer(player.getUniqueId());
+                    pvpInvite.pvpPlayer = new PvPPlayer(player.getUniqueId());
                     //pvpInvite.pvpPlayer = new PvPPlayer(player.getUniqueId());
                 }else if(args[0].equalsIgnoreCase("Accept")){//Accept
-                    if(pvpPlayer.opponents.contains(player.getUniqueId())){
+                    if(pvpInvite.pvpPlayer.opponents.contains(player.getUniqueId())){
                         String accept = pvpInvite.accept.replaceAll("%player%",player.getDisplayName());
                         String acceptTo = pvpInvite.acceptTo.replaceAll("%player%",player.getDisplayName());
                         target.sendMessage(accept);
                         sender.sendMessage(acceptTo);//給邀請者回覆
                         //同意則開始倒數並把接受決鬥的玩家加入
                         sendStartPVP((Player)sender,target);
-                        pvpPlayer.addOpponent(target.getUniqueId());
+                        pvpInvite.pvpPlayer.addOpponent(target.getUniqueId());
                     }
                 }else if(args[0].equalsIgnoreCase("Deny")){//Deny
-                    if(pvpPlayer.opponents.contains(player.getUniqueId())){
+                    if(pvpInvite.pvpPlayer.opponents.contains(player.getUniqueId())){
                         String deny = pvpInvite.deny.replaceAll("%player%",player.getDisplayName());
                         String denyTo = pvpInvite.denyTo.replaceAll("%player%",player.getDisplayName());
                         target.sendMessage(deny);
                         sender.sendMessage(denyTo);//給邀請者回覆
                         //拒絕則把邀請決鬥的玩家移除
-                        pvpPlayer.removeOpponent(player.getUniqueId());
+                        pvpInvite.pvpPlayer.removeOpponent(player.getUniqueId());
                     }
                 }
             }

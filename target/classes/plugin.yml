@@ -11,7 +11,7 @@ commands:
 permissions:
   PvPInvite.pvp:
     description: This is a pvp command.
-    default: true
+    default: false
   PvPInvite.*:
     description: Wildcard permission
     default: op
