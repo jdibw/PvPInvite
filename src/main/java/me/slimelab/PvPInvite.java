@@ -20,6 +20,7 @@ import static org.bukkit.ChatColor.*;
 
 public final class PvPInvite extends JavaPlugin implements Listener {
 
+    public static PvPInvite pvpInvite;
     private PvPPlayer pvpPlayer;
     public static ArrayList<UUID> pvpers = new ArrayList<>();
     public static HashMap<UUID, PvPPlayer> invites = new HashMap<>();
@@ -31,6 +32,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        pvpInvite = this;
         saveDefaultConfig();
         need_invite = translateAlternateColorCodes('&', getConfig().getString("messages.Need_Invite"));
         wait_for_accept = translateAlternateColorCodes('&', getConfig().getString("messages.Wait_for_Accept"));
@@ -51,7 +53,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         target_Offline = translateAlternateColorCodes('&', getConfig().getString("messages.Target_Offline"));
 
         getServer().getPluginManager().registerEvents(this, this);
-        getCommand("pvp").setExecutor(new Commands(this));
+        getCommand("pvp").setExecutor(new Commands());
     }
 
     @Override
@@ -150,12 +152,12 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         player.sendMessage(messages);
     }
 
-    public void addPVP(Player sender, Player target){
-        pvpPlayer = new PvPPlayer(sender.getUniqueId());
+    public static void addPVP(Player sender, Player target){
+        PvPPlayer pvpPlayer = new PvPPlayer(sender.getUniqueId());
         invites.put(sender.getUniqueId(),pvpPlayer);
         Integer delay = 15;
         //15秒後邀請無效
-        Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+        Bukkit.getScheduler().runTaskLater(pvpInvite, new Runnable() {
             @Override
             public void run() {
                 if(invites.get(sender.getUniqueId())!=null &&
@@ -170,7 +172,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         }, delay*20L);
     }
 
-    public void acceptPVP(Player sender, Player target){
+    public static void acceptPVP(Player sender, Player target){
         PvPPlayer pvpPlayer = new PvPPlayer(sender.getUniqueId());
         pvpPlayer.addOpponent(target.getUniqueId());
         pvpPlayer.setPVPing(true);
@@ -182,11 +184,11 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         invites.put(target.getUniqueId(),pvpPlayer);
     }
 
-    public void removePVP(Player sender, Player target){
+    public static void removePVP(Player sender, Player target){
         invites.remove(sender.getUniqueId());
         invites.remove(target.getUniqueId());
     }
-    private void sendEndPVP(Player sender, Player target, String winner) {
+    private static void sendEndPVP(Player sender, Player target, String winner) {
         String[] title = PvPInvite.pvpEnd.replaceAll("%player%",winner).split(",");
         if(sender.isOnline())
             sender.sendTitle(title[0],title[1],0,60,0);
