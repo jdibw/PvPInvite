@@ -156,7 +156,8 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         Bukkit.getScheduler().runTaskLater(this, new Runnable() {
             @Override
             public void run() {
-                if(!invites.get(sender.getUniqueId()).pvping){
+                if(invites.get(sender.getUniqueId())!=null &&
+                        !invites.get(sender.getUniqueId()).pvping){
                     if(sender.isOnline())
                         sender.sendMessage(invite_OverTime);
                     if(target.isOnline())
