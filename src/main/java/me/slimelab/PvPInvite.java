@@ -146,16 +146,17 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         player.sendMessage(messages);
     }
 
-
     public void addPVP(Player player, Player target){
         pvpPlayer = new PvPPlayer(player.getUniqueId());
         invites.put(player.getUniqueId(),pvpPlayer);
         Integer delay = 15;
+        //15秒後邀請無效
         Bukkit.getScheduler().runTaskLater(this, new Runnable() {
             @Override
             public void run() {
                 if(!invites.get(player.getUniqueId()).pvping){
                     player.sendMessage(invite_OverTime);
+                    target.sendMessage(invite_OverTime);
                     removePVP(player, target);
                 }
             }
@@ -165,12 +166,12 @@ public final class PvPInvite extends JavaPlugin implements Listener {
     public void acceptPVP(Player sender, Player target){
         PvPPlayer pvpPlayer = new PvPPlayer(sender.getUniqueId());
         pvpPlayer.addOpponent(target.getUniqueId());
-        pvpPlayer.pvping = true;
+        pvpPlayer.setPVPing(true);
         invites.put(sender.getUniqueId(),pvpPlayer);
 
         pvpPlayer = new PvPPlayer(target.getUniqueId());
         pvpPlayer.addOpponent(sender.getUniqueId());
-        pvpPlayer.pvping = true;
+        pvpPlayer.setPVPing(true);
         invites.put(target.getUniqueId(),pvpPlayer);
     }
 
