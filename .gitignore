@@ -32,3 +32,5 @@ target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.l
 .idea/vcs.xml
 target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
 target/classes/config.yml
+target/classes/config.yml
+.idea/vcs.xml

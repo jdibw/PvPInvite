@@ -37,6 +37,7 @@ public class Commands implements CommandExecutor {
                         //對方已在對戰無法邀請
                         player.sendMessage(pvpInvite.pvping_invite);
                     }else{
+                        pvpInvite.send(player,pvpInvite.wait_for_accept.replaceAll("%player%", target.getDisplayName()));
                         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(pvpInvite.wait_for_accept.replaceAll("%player%", target.getDisplayName())));
                         String chooseCommand = pvpInvite.chooseCommand.replaceAll("%player%",player.getDisplayName());
                         pvpInvite.send(target, pvpInvite.invite.replaceAll("%player%", player.getDisplayName()).split("%NEWLINE%"));
