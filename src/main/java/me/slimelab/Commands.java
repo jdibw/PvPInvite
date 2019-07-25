@@ -1,5 +1,7 @@
 package me.slimelab;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -30,21 +32,33 @@ public class Commands implements CommandExecutor {
                     if (target == null) {
                         sender.sendMessage("目標玩家 "+args[1] + " 不在線上!");
                         return false;
-                    }
-                    String chooseCommand = pvpInvite.chooseCommand.replaceAll("%player%",player.getDisplayName());
-                    pvpInvite.send(target, pvpInvite.invite.replaceAll("%player%", player.getDisplayName()).split("%NEWLINE%"));
-                    pvpInvite.sendChoose(target,chooseCommand.split(","),new String[]{pvpInvite.choose_accept,pvpInvite.choose_deny});
+                    }else if(pvpInvite.invites.get(target.getUniqueId())!=null &&
+                            pvpInvite.invites.get(target.getUniqueId()).pvping){
+                        //對方已在對戰無法邀請
+                        player.sendMessage(pvpInvite.pvping_invite);
+                    }else{
+                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(pvpInvite.wait_for_accept.replaceAll("%player%", target.getDisplayName())));
+                        String chooseCommand = pvpInvite.chooseCommand.replaceAll("%player%",player.getDisplayName());
+                        pvpInvite.send(target, pvpInvite.invite.replaceAll("%player%", player.getDisplayName()).split("%NEWLINE%"));
+                        pvpInvite.sendChoose(target,chooseCommand.split(","),new String[]{pvpInvite.choose_accept,pvpInvite.choose_deny});
 
-                    addPVP(player, target);
+                        pvpInvite.addPVP(player, target);
+                    }
+
                 }else if(args[0].equalsIgnoreCase("Accept")){//Accept
-                    if(pvpInvite.invites.get(target.getUniqueId())!=null){
+                    if(pvpInvite.invites.get(player.getUniqueId())!=null &&
+                            pvpInvite.invites.get(player.getUniqueId()).pvping){
+                        //已在對戰中無法接受邀請
+                        player.sendMessage(pvpInvite.pvping_Accept);
+                    }else if(pvpInvite.invites.get(target.getUniqueId())!=null){
+                        //對方有邀請並且自己目前沒在對戰中
                         String accept = pvpInvite.accept.replaceAll("%player%",target.getDisplayName());
                         String acceptTo = pvpInvite.acceptTo.replaceAll("%player%",player.getDisplayName());
                         target.sendMessage(acceptTo);
                         sender.sendMessage(accept);
                         //同意則開始倒數並把接受決鬥的玩家加入
                         sendStartPVP(player,target);
-                        acceptPVP(player, target);
+                        pvpInvite.acceptPVP(player, target);
                     }
                 }else if(args[0].equalsIgnoreCase("Deny")){//Deny
                     if(pvpInvite.invites.get(target.getUniqueId())!=null){
@@ -53,7 +67,7 @@ public class Commands implements CommandExecutor {
                         target.sendMessage(denyTo);//給邀請者回覆
                         sender.sendMessage(deny);
                         //拒絕則把邀請決鬥的玩家移除
-                        removePVP(player, target);
+                        pvpInvite.removePVP(player, target);
                     }
                 }
             }
@@ -79,34 +93,4 @@ public class Commands implements CommandExecutor {
         }
     }
 
-    public void addPVP(Player player, Player target){
-        pvpPlayer = new PvPPlayer(player.getUniqueId());
-        pvpInvite.invites.put(player.getUniqueId(),pvpPlayer);
-        Integer delay = 15;
-        Bukkit.getScheduler().runTaskLater(pvpInvite, new Runnable() {
-            @Override
-            public void run() {
-                if(!pvpInvite.invites.get(player.getUniqueId()).pvping){
-                    player.sendMessage(pvpInvite.invite_OverTime);
-                    removePVP(player, target);
-                }
-            }
-        }, delay*20L);
-    }
-
-    public void acceptPVP(Player sender, Player target){
-        PvPPlayer pvpPlayer = new PvPPlayer(sender.getUniqueId());
-        pvpPlayer.addOpponent(target.getUniqueId());
-        pvpInvite.invites.put(sender.getUniqueId(),pvpPlayer);
-
-        pvpPlayer = new PvPPlayer(target.getUniqueId());
-        pvpPlayer.addOpponent(sender.getUniqueId());
-        pvpInvite.invites.put(target.getUniqueId(),pvpPlayer);
-        sender.sendMessage("pvping:"+pvpInvite.invites.get(sender.getUniqueId()).pvping+"");
-    }
-
-    public void removePVP(Player sender, Player target){
-        pvpInvite.invites.remove(sender.getUniqueId());
-        pvpInvite.invites.remove(target.getUniqueId());
-    }
 }
