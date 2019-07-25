@@ -24,13 +24,13 @@ public class Commands implements CommandExecutor {
     public final boolean onCommand(CommandSender sender, Command cmd,String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("pvp")) { // If the player typed /basic then do the following...
             if (!(sender instanceof Player)) {
-                sender.sendMessage("這個指令只能由玩家使用.");
+                sender.sendMessage(pvpInvite.command_Permission);
             } else {
                 Player player = (Player) sender;
                 Player target = (Bukkit.getServer().getPlayer(args[1]));
                 if(args[0].equalsIgnoreCase("Invite")){//Invite
                     if (target == null) {
-                        sender.sendMessage("目標玩家 "+args[1] + " 不在線上!");
+                        sender.sendMessage(pvpInvite.target_Offline.replaceAll("%player%",args[1]));
                         return false;
                     }else if(pvpInvite.invites.get(target.getUniqueId())!=null &&
                             pvpInvite.invites.get(target.getUniqueId()).pvping){
