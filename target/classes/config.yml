@@ -19,3 +19,4 @@
       PVPing_Accept: "&6已在對戰中無法接受邀請"
       Command_Permission: "這個指令只能由玩家使用"
       Target_Offline: "目標玩家&b%player%不在線上!"
+      Command: "/pvp [Invite|Accept|Deny] [player]"

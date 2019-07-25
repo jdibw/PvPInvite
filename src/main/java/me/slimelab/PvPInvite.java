@@ -31,7 +31,8 @@ public final class PvPInvite extends JavaPlugin implements Listener {
 
     public static String need_invite, wait_for_accept,invite,invite_OverTime,
             accept,acceptTo,deny,denyTo,choose_accept,choose_deny,chooseCommand,
-            pvpStart,pvpEnd,pvping_invite,pvping_Accept,command_Permission,target_Offline;
+            pvpStart,pvpEnd,pvping_invite,pvping_Accept,command_Permission,
+            target_Offline,command;
 
     @Override
     public void onEnable() {
@@ -54,6 +55,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         pvping_Accept = translateAlternateColorCodes('&', getConfig().getString("messages.PVPing_Accept"));
         command_Permission = translateAlternateColorCodes('&', getConfig().getString("messages.Command_Permission"));
         target_Offline = translateAlternateColorCodes('&', getConfig().getString("messages.Target_Offline"));
+        command = translateAlternateColorCodes('&', getConfig().getString("messages.Command"));
 
         getServer().getPluginManager().registerEvents(this, this);
         getCommand("pvp").setExecutor(new Commands());

@@ -23,7 +23,11 @@ public class Commands implements CommandExecutor {
         if (cmd.getName().equalsIgnoreCase("pvp")) { // If the player typed /basic then do the following...
             if (!(sender instanceof Player)) {
                 sender.sendMessage(pvpInvite.command_Permission);
-            } else {
+            }else if(args.length != 2 || !args[0].equalsIgnoreCase("Invite") ||
+                    !args[0].equalsIgnoreCase("Accept") ||
+                    !args[0].equalsIgnoreCase("Deny")){
+                sender.sendMessage(pvpInvite.command);
+            }else{
                 Player player = (Player) sender;
                 Player target = (Bukkit.getServer().getPlayer(args[1]));
                 if(args[0].equalsIgnoreCase("Invite")){//Invite
