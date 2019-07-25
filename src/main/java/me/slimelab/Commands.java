@@ -70,6 +70,8 @@ public class Commands implements CommandExecutor {
                         //拒絕則把邀請決鬥的玩家移除
                         pvpInvite.removePVP(player, target);
                     }
+                }else{
+                    sender.sendMessage(pvpInvite.command);
                 }
             }
             return true;
