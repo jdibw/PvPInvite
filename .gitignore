@@ -63,3 +63,4 @@ target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.l
 .idea/misc.xml
 .idea/modules.xml
 src/main/main.iml
+.idea/workspace.xml

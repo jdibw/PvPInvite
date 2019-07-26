@@ -160,6 +160,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
 
     public static void addPVP(Player sender, Player target){
         PvPPlayer pvpPlayer = new PvPPlayer(sender.getUniqueId());
+        pvpPlayer.addOpponent(target.getUniqueId());
         invites.put(sender.getUniqueId(),pvpPlayer);
         Integer delay = 15;
         //15秒後邀請無效
