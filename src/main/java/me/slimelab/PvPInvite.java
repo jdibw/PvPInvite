@@ -102,7 +102,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                 }
             }else if(invites.get(player.getUniqueId())!=null && invites.get(target.getUniqueId())!=null &&
                     invites.get(player.getUniqueId()).pvping && invites.get(target.getUniqueId()).pvping){
-
+                //雙方接受PVP後可以互相傷害
             }else{
                 e.setCancelled(true);
             }
