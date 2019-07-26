@@ -15,8 +15,6 @@
       ChooseCommand: "/pvp Accept %player%,/pvp Deny %player%"
       PVPStart: "&6決鬥將在%time%秒後開始!!!"
       PVPEnd: "&6決鬥結束,獲勝者 &b%player%"
-      PVPing_invite: "&6對方已在對戰無法邀請"
-      PVPing_Accept: "&6已在對戰中無法接受邀請"
       Command_Permission: "這個指令只能由玩家使用"
       Target_Offline: "目標玩家&b%player%不在線上!"
       Command: "&c指令使用方法: /pvp [Invite|Accept|Deny] [player]"

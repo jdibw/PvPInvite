@@ -30,12 +30,8 @@ public class Commands implements CommandExecutor {
                 Player target = (Bukkit.getServer().getPlayer(args[1]));
                 if(args[0].equalsIgnoreCase("Invite")){//Invite
                     if (target == null) {
-                        sender.sendMessage(pvpInvite.target_Offline.replaceAll("%player%",args[1]));
+                        sender.sendMessage(pvpInvite.target_Offline.replaceAll("%player%", args[1]));
                         return false;
-                    }else if(pvpInvite.invites.get(target.getUniqueId())!=null &&
-                            pvpInvite.invites.get(target.getUniqueId()).pvping){
-                        //對方已在對戰無法邀請
-                        player.sendMessage(pvpInvite.pvping_invite);
                     }else{
                         pvpInvite.send(player,pvpInvite.wait_for_accept.replaceAll("%player%", target.getDisplayName()));
                         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(pvpInvite.wait_for_accept.replaceAll("%player%", target.getDisplayName())));
@@ -47,11 +43,7 @@ public class Commands implements CommandExecutor {
                     }
 
                 }else if(args[0].equalsIgnoreCase("Accept")){//Accept
-                    if(pvpInvite.invites.get(player.getUniqueId())!=null &&
-                            pvpInvite.invites.get(player.getUniqueId()).pvping){
-                        //已在對戰中無法接受邀請
-                        player.sendMessage(pvpInvite.pvping_Accept);
-                    }else if(pvpInvite.invites.get(target.getUniqueId())!=null){
+                    if(pvpInvite.invites.get(target.getUniqueId())!=null){
                         //對方有邀請並且自己目前沒在對戰中
                         String accept = pvpInvite.accept.replaceAll("%player%",target.getDisplayName());
                         String acceptTo = pvpInvite.acceptTo.replaceAll("%player%",player.getDisplayName());

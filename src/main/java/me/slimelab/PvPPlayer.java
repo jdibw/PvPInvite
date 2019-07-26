@@ -12,7 +12,6 @@ public class PvPPlayer {
 
     public PvPPlayer(UUID uuid){
         this.uuid = uuid;
-        PvPInvite.pvpers.add(uuid);
     }
 
     public void addOpponent(UUID uuid){

@@ -24,14 +24,12 @@ import static org.bukkit.ChatColor.*;
 public final class PvPInvite extends JavaPlugin implements Listener {
 
     public static PvPInvite pvpInvite;
-    private PvPPlayer pvpPlayer;
-    public static ArrayList<UUID> pvpers = new ArrayList<>();
     public static HashMap<UUID, PvPPlayer> invites = new HashMap<>();
 
 
     public static String need_invite, wait_for_accept,invite,invite_OverTime,
             accept,acceptTo,deny,denyTo,choose_accept,choose_deny,chooseCommand,
-            pvpStart,pvpEnd,pvping_invite,pvping_Accept,command_Permission,
+            pvpStart,pvpEnd,command_Permission,
             target_Offline,command;
 
     @Override
@@ -51,8 +49,6 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         choose_deny= translateAlternateColorCodes('&', getConfig().getString("messages.ChooseDeny"));
         pvpStart = translateAlternateColorCodes('&', getConfig().getString("messages.PVPStart"));
         pvpEnd = translateAlternateColorCodes('&', getConfig().getString("messages.PVPEnd"));
-        pvping_invite = translateAlternateColorCodes('&', getConfig().getString("messages.PVPing_invite"));
-        pvping_Accept = translateAlternateColorCodes('&', getConfig().getString("messages.PVPing_Accept"));
         command_Permission = translateAlternateColorCodes('&', getConfig().getString("messages.Command_Permission"));
         target_Offline = translateAlternateColorCodes('&', getConfig().getString("messages.Target_Offline"));
         command = translateAlternateColorCodes('&', getConfig().getString("messages.Command"));
@@ -86,28 +82,14 @@ public final class PvPInvite extends JavaPlugin implements Listener {
             if(invites.get(player.getUniqueId()) == null){
                 if(player.isSneaking()){
                     e.setCancelled(true);
-                    if(invites.get(target.getUniqueId())!=null && invites.get(target.getUniqueId()).pvping){
-                        //對方已在對戰無法邀請
-                        player.sendMessage(pvping_invite);
-                    }else {
-                        send(player,wait_for_accept.replaceAll("%player%", target.getDisplayName()));
-                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(wait_for_accept.replaceAll("%player%", target.getDisplayName())));
-                        send(target, invite.replaceAll("%player%", player.getDisplayName()).split("%NEWLINE%"));
-                        sendChoose(target, chooseCommand.replaceAll("%player%", player.getDisplayName()).split(","), new String[]{choose_accept, choose_deny});
-
-                        addPVP(player, target);
-                    }
+                    send(player,wait_for_accept.replaceAll("%player%", target.getDisplayName()));
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(wait_for_accept.replaceAll("%player%", target.getDisplayName())));
+                    send(target, invite.replaceAll("%player%", player.getDisplayName()).split("%NEWLINE%"));
+                    sendChoose(target, chooseCommand.replaceAll("%player%", player.getDisplayName()).split(","), new String[]{choose_accept, choose_deny});
+                    addPVP(player, target);
                 }else {
                     e.setCancelled(true);
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(need_invite.replaceAll("%player%", target.getDisplayName())));
-
-                }
-            }else if(invites.get(player.getUniqueId())!=null && invites.get(target.getUniqueId())!=null ){
-                if(invites.get(target.getUniqueId()).opponents.contains(player.getUniqueId()) &&
-                        invites.get(player.getUniqueId()).opponents.contains(target.getUniqueId())){
-                    if(target.getHealth()-e.getDamage()<=0){
-                        EndPVP(target);
-                    }
                 }
             }else{
                 e.setCancelled(true);
@@ -173,14 +155,11 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         Bukkit.getScheduler().runTaskLater(pvpInvite, new Runnable() {
             @Override
             public void run() {
-                if(invites.get(sender.getUniqueId())!=null &&
-                        !invites.get(sender.getUniqueId()).pvping){
                     if(sender.isOnline())
                         sender.sendMessage(invite_OverTime);
                     if(target.isOnline())
                         target.sendMessage(invite_OverTime);
                     removePVP(sender, target);
-                }
             }
         }, delay*20L);
     }
