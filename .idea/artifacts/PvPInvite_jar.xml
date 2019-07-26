@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="PvPInvite:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/PvPInvite_jar</output-path>
-    <root id="archive" name="PvPInvite.jar">
-      <element id="module-output" name="PvPInvite" />
-    </root>
-  </artifact>
-</component>

@@ -134,9 +134,9 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                 e.setCancelled(true);
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(need_invite.replaceAll("%player%", target.getDisplayName())));
             }
-        }else{
-            e.setCancelled(true);
-        }
+        }//else{
+        //    e.setCancelled(true);
+        //}
     }
 
     public static void send(Player player, String onClick, String[] messages) {
