@@ -50,7 +50,7 @@ public class Commands implements CommandExecutor {
                         target.sendMessage(acceptTo);
                         sender.sendMessage(accept);
                         //同意則開始倒數並把接受決鬥的玩家加入
-                        sendStartPVP(player,target);
+                        pvpInvite.sendStartPVP(player,target);
                         pvpInvite.acceptPVP(player, target);
                     }
                 }else if(args[0].equalsIgnoreCase("Deny")){//Deny
@@ -70,22 +70,4 @@ public class Commands implements CommandExecutor {
         }
         return false;
     }
-
-    private void sendStartPVP(Player sender, Player target) {
-        Integer delay = 0;
-        String pvpStart = PvPInvite.pvpStart;
-        for(int i = 3 ; i > 0 ; i--) {
-            Integer I = i;
-            Bukkit.getScheduler().runTaskLater(pvpInvite, new Runnable() {
-                @Override
-                public void run() {
-                    String title = pvpStart.replaceAll("%time%",I.toString());
-                    sender.sendTitle(title,"",0,20,0);
-                    target.sendTitle(title,"",0,20,0);
-                }
-            }, delay*20L);
-            delay++;
-        }
-    }
-
 }
