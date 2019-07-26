@@ -84,13 +84,11 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                     e.setCancelled(true);
                     if(invites.get(target.getUniqueId())!=null &&
                             invites.get(target.getUniqueId()).opponents.contains(player.getUniqueId())){
-                        String accept = pvpInvite.accept.replaceAll("%player%",target.getDisplayName());
-                        String acceptTo = pvpInvite.acceptTo.replaceAll("%player%",player.getDisplayName());
-                        target.sendMessage(acceptTo);
-                        player.sendMessage(accept);
+                        target.sendMessage(acceptTo.replaceAll("%player%",target.getDisplayName()));
+                        player.sendMessage(accept.replaceAll("%player%",player.getDisplayName()));
                         //同意則開始倒數並把接受決鬥的玩家加入
                         sendStartPVP(player,target);
-                        pvpInvite.acceptPVP(player, target);
+                        acceptPVP(player, target);
                     }else{
                         send(player,wait_for_accept.replaceAll("%player%", target.getDisplayName()));
                         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(wait_for_accept.replaceAll("%player%", target.getDisplayName())));
@@ -167,9 +165,9 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         Bukkit.getScheduler().runTaskLater(pvpInvite, new Runnable() {
             @Override
             public void run() {
-                    if(sender.isOnline())
+                    if(sender.isOnline() && !invites.get(sender.getUniqueId()).pvping)
                         sender.sendMessage(invite_OverTime);
-                    if(target.isOnline())
+                    if(target.isOnline() && !invites.get(target.getUniqueId()).pvping)
                         target.sendMessage(invite_OverTime);
                     removePVP(sender, target);
             }
