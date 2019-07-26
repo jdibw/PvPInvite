@@ -100,6 +100,9 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                     e.setCancelled(true);
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(need_invite.replaceAll("%player%", target.getDisplayName())));
                 }
+            }else if(invites.get(player.getUniqueId())!=null && invites.get(target.getUniqueId())!=null &&
+                    invites.get(player.getUniqueId()).pvping && invites.get(target.getUniqueId()).pvping){
+
             }else{
                 e.setCancelled(true);
             }
@@ -165,11 +168,13 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         Bukkit.getScheduler().runTaskLater(pvpInvite, new Runnable() {
             @Override
             public void run() {
-                    if(sender.isOnline() && !invites.get(sender.getUniqueId()).pvping)
+                if(!invites.get(sender.getUniqueId()).pvping){
+                    if(sender.isOnline())
                         sender.sendMessage(invite_OverTime);
-                    if(target.isOnline() && !invites.get(target.getUniqueId()).pvping)
+                    if(target.isOnline())
                         target.sendMessage(invite_OverTime);
                     removePVP(sender, target);
+                }
             }
         }, delay*20L);
     }
@@ -188,7 +193,6 @@ public final class PvPInvite extends JavaPlugin implements Listener {
 
     public static void sendStartPVP(Player sender, Player target) {
         Integer delay = 0;
-        String pvpStart = PvPInvite.pvpStart;
         for(int i = 3 ; i > 0 ; i--) {
             Integer I = i;
             Bukkit.getScheduler().runTaskLater(pvpInvite, new Runnable() {
