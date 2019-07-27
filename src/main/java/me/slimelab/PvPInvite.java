@@ -84,8 +84,8 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                     e.setCancelled(true);
                     if(invites.get(target.getUniqueId())!=null &&
                             invites.get(target.getUniqueId()).opponents.contains(player.getUniqueId())){
-                        target.sendMessage(acceptTo.replaceAll("%player%",target.getDisplayName()));
-                        player.sendMessage(accept.replaceAll("%player%",player.getDisplayName()));
+                        target.sendMessage(acceptTo.replaceAll("%player%",player.getDisplayName()));
+                        player.sendMessage(accept.replaceAll("%player%",target.getDisplayName()));
                         //同意則開始倒數並把接受決鬥的玩家加入
                         sendStartPVP(player,target);
                         acceptPVP(player, target);
@@ -163,16 +163,23 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         PvPPlayer pvpPlayer = new PvPPlayer(sender.getUniqueId());
         pvpPlayer.addOpponent(target.getUniqueId());
         invites.put(sender.getUniqueId(),pvpPlayer);
-        Integer delay = 15;
-        //15秒後邀請無效
+        Integer delay = 10;
+        //10秒後邀請無效
         Bukkit.getScheduler().runTaskLater(pvpInvite, new Runnable() {
             @Override
             public void run() {
-                if(!invites.get(sender.getUniqueId()).pvping){
+                int remove = 0;
+                if(invites.get(sender.getUniqueId()) != null && !invites.get(sender.getUniqueId()).pvping){
                     if(sender.isOnline())
                         sender.sendMessage(invite_OverTime);
+                    remove++;
+                }
+                if(invites.get(sender.getUniqueId()) != null && !invites.get(sender.getUniqueId()).pvping){
                     if(target.isOnline())
-                        target.sendMessage(invite_OverTime);
+                            target.sendMessage(invite_OverTime);
+                    remove++;
+                }
+                if(remove > 0){
                     removePVP(sender, target);
                 }
             }
