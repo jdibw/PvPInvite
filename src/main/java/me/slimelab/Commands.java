@@ -3,11 +3,14 @@ package me.slimelab;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import java.lang.*;
+
+import java.util.UUID;
 
 import static me.slimelab.PvPInvite.pvpInvite;
 
@@ -36,11 +39,11 @@ public class Commands implements CommandExecutor {
                         pvpInvite.send(target, pvpInvite.invite.replaceAll("%player%", player.getDisplayName()).split("%NEWLINE%"));
                         pvpInvite.sendChoose(target,chooseCommand.split(","),new String[]{pvpInvite.choose_accept,pvpInvite.choose_deny});
 
-                        pvpInvite.invitesPVP(player, target);
+                        pvpInvite.addPVP(player, target);
                     }
 
                 }else if(args[0].equalsIgnoreCase("Accept")){//Accept
-                    if(pvpInvite.invites.get(player.getUniqueId()).invites.contains(target.getUniqueId())){
+                    if(pvpInvite.invites.get(target.getUniqueId())!=null){
                         //對方有邀請並且自己目前沒在對戰中
                         String accept = pvpInvite.accept.replaceAll("%player%",target.getDisplayName());
                         String acceptTo = pvpInvite.acceptTo.replaceAll("%player%",player.getDisplayName());
@@ -51,7 +54,7 @@ public class Commands implements CommandExecutor {
                         pvpInvite.acceptPVP(player, target);
                     }
                 }else if(args[0].equalsIgnoreCase("Deny")){//Deny
-                    if(pvpInvite.invites.get(player.getUniqueId()).invites.contains(target.getUniqueId())){
+                    if(pvpInvite.invites.get(target.getUniqueId())!=null){
                         String deny = pvpInvite.deny.replaceAll("%player%",target.getDisplayName());
                         String denyTo = pvpInvite.denyTo.replaceAll("%player%",player.getDisplayName());
                         target.sendMessage(denyTo);//給邀請者回覆
