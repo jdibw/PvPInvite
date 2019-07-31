@@ -60,6 +60,13 @@ public final class PvPInvite extends JavaPlugin implements Listener {
     }
 
     @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event){
+        Player player = event.getPlayer();
+        PvPPlayer pvpPlayer = new PvPPlayer(player.getUniqueId());
+        invites.put(player.getUniqueId(), pvpPlayer);
+    }
+
+    @EventHandler
     public void onQuit(PlayerQuitEvent e){
         Player player = e.getPlayer();
         EndPVP(player);
@@ -78,8 +85,8 @@ public final class PvPInvite extends JavaPlugin implements Listener {
             Player player = (Player)e.getDamager();
             Player target = (Player)e.getEntity();
             if(invites.get(player.getUniqueId()) == null){
-                e.setCancelled(true);
                 if(player.isSneaking()){
+                    e.setCancelled(true);
                     if(invites.get(player.getUniqueId()).invites.contains(target.getUniqueId())){
                         target.sendMessage(acceptTo.replaceAll("%player%",player.getDisplayName()));
                         player.sendMessage(accept.replaceAll("%player%",target.getDisplayName()));
@@ -94,6 +101,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                         invitesPVP(player, target);
                     }
                 }else {
+                    e.setCancelled(true);
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(need_invite.replaceAll("%player%", target.getDisplayName())));
                 }
             }else if(invites.get(player.getUniqueId()).opponents.contains(target.getUniqueId()) &&
@@ -165,13 +173,19 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         Bukkit.getScheduler().runTaskLater(pvpInvite, new Runnable() {
             @Override
             public void run() {
+                int remove = 0;
                 if(!invites.get(sender.getUniqueId()).pvping){
                     if(sender.isOnline())
                         sender.sendMessage(invite_OverTime);
+                    remove++;
                 }
                 if(!invites.get(sender.getUniqueId()).pvping){
                     if(target.isOnline())
                         target.sendMessage(invite_OverTime);
+                    remove++;
+                }
+                if(remove > 0){
+                    removePVP(sender, target);
                 }
             }
         }, delay*20L);
