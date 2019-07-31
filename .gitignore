@@ -66,3 +66,9 @@ src/main/main.iml
 .idea/workspace.xml
 target/maven-archiver/pom.properties
 target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+target/classes/plugin.yml
+target/maven-archiver/pom.properties
+target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+src/main/main.iml
+.idea/misc.xml
+.idea/workspace.xml

@@ -1,14 +1,15 @@
 package me.slimelab;
 
-import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class PvPPlayer {
 
     UUID uuid;
-    public boolean pvping = false;
     public ArrayList<UUID> opponents = new ArrayList<>();
+    public ArrayList<UUID> invites = new ArrayList<>();
 
     public PvPPlayer(UUID uuid){
         this.uuid = uuid;
@@ -22,12 +23,21 @@ public class PvPPlayer {
         this.opponents.remove(uuid);
     }
 
-    public void setUUID(UUID uuid){
-        this.uuid = uuid;
+    public void addInvites(UUID uuid){
+        this.invites.add(uuid);
+        Bukkit.getScheduler().runTaskLater(PvPInvite.pvpInvite, new Runnable() {
+            @Override
+            public void run() {
+                removeInvites(uuid);
+            }
+        }, 10*20L);
     }
 
-    public void setPVPing(boolean pvping){
-        this.pvping = pvping;
+    public void removeInvites(UUID uuid){
+        this.invites.remove(uuid);
+    }
+    public void setUUID(UUID uuid){
+        this.uuid = uuid;
     }
 
 }
