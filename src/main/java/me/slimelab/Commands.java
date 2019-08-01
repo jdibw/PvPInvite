@@ -9,58 +9,55 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import java.lang.*;
 
-import static me.slimelab.PvPInvite.pvpInvite;
-
 public class Commands implements CommandExecutor {
 
-    private PvPPlayer pvpPlayer;
 
     @Override
     public final boolean onCommand(CommandSender sender, Command cmd,String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("pvp")) { // If the player typed /basic then do the following...
             if (!(sender instanceof Player)) {
-                sender.sendMessage(pvpInvite.command_Permission);
+                sender.sendMessage(PvPInvite.command_Permission);
             }else if(args.length != 2){
-                sender.sendMessage(pvpInvite.command);
+                sender.sendMessage(PvPInvite.command);
             }else{
                 Player player = (Player) sender;
                 Player target = (Bukkit.getServer().getPlayer(args[1]));
                 if(args[0].equalsIgnoreCase("Invite")){//Invite
                     if (target == null) {
-                        sender.sendMessage(pvpInvite.target_Offline.replaceAll("%player%", args[1]));
+                        sender.sendMessage(PvPInvite.target_Offline.replaceAll("%player%", args[1]));
                         return false;
                     }else{
-                        pvpInvite.send(player,pvpInvite.wait_for_accept.replaceAll("%player%", target.getDisplayName()));
-                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(pvpInvite.wait_for_accept.replaceAll("%player%", target.getDisplayName())));
-                        String chooseCommand = pvpInvite.chooseCommand.replaceAll("%player%",player.getDisplayName());
-                        pvpInvite.send(target, pvpInvite.invite.replaceAll("%player%", player.getDisplayName()).split("%NEWLINE%"));
-                        pvpInvite.sendChoose(target,chooseCommand.split(","),new String[]{pvpInvite.choose_accept,pvpInvite.choose_deny});
+                        PvPInvite.send(player, PvPInvite.wait_for_accept.replaceAll("%player%", target.getDisplayName()));
+                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(PvPInvite.wait_for_accept.replaceAll("%player%", target.getDisplayName())));
+                        String chooseCommand = PvPInvite.chooseCommand.replaceAll("%player%",player.getDisplayName());
+                        PvPInvite.send(target, PvPInvite.invite.replaceAll("%player%", player.getDisplayName()).split("%NEWLINE%"));
+                        PvPInvite.sendChoose(target,chooseCommand.split(","),new String[]{PvPInvite.choose_accept,PvPInvite.choose_deny});
 
-                        pvpInvite.invitesPVP(player, target);
+                        PvPInvite.invitesPVP(player, target);
                     }
 
                 }else if(args[0].equalsIgnoreCase("Accept")){//Accept
-                    if(pvpInvite.players.get(player.getUniqueId()).invites.contains(target.getUniqueId())){
+                    if(PvPInvite.players.get(player.getUniqueId()).invites.contains(target.getUniqueId())){
                         //對方有邀請並且自己目前沒在對戰中
-                        String accept = pvpInvite.accept.replaceAll("%player%",target.getDisplayName());
-                        String acceptTo = pvpInvite.acceptTo.replaceAll("%player%",player.getDisplayName());
+                        String accept = PvPInvite.accept.replaceAll("%player%",target.getDisplayName());
+                        String acceptTo = PvPInvite.acceptTo.replaceAll("%player%",player.getDisplayName());
                         target.sendMessage(acceptTo);
                         sender.sendMessage(accept);
                         //同意則開始倒數並把接受決鬥的玩家加入
-                        pvpInvite.sendStartPVP(player,target);
-                        pvpInvite.acceptPVP(player, target);
+                        PvPInvite.sendStartPVP(player,target);
+                        PvPInvite.acceptPVP(player, target);
                     }
                 }else if(args[0].equalsIgnoreCase("Deny")){//Deny
-                    if(pvpInvite.players.get(player.getUniqueId()).invites.contains(target.getUniqueId())){
-                        String deny = pvpInvite.deny.replaceAll("%player%",target.getDisplayName());
-                        String denyTo = pvpInvite.denyTo.replaceAll("%player%",player.getDisplayName());
+                    if(PvPInvite.players.get(player.getUniqueId()).invites.contains(target.getUniqueId())){
+                        String deny = PvPInvite.deny.replaceAll("%player%",target.getDisplayName());
+                        String denyTo = PvPInvite.denyTo.replaceAll("%player%",player.getDisplayName());
                         target.sendMessage(denyTo);//給邀請者回覆
                         sender.sendMessage(deny);
                         //拒絕則把邀請決鬥的玩家移除
-                        pvpInvite.removePVP(player, target);
+                        PvPInvite.removePVP(player, target);
                     }
                 }else{
-                    sender.sendMessage(pvpInvite.command);
+                    sender.sendMessage(PvPInvite.command);
                 }
             }
             return true;
