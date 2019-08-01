@@ -74,6 +74,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
     public void onQuit(PlayerQuitEvent e){
         Player player = e.getPlayer();
         EndPVP(player);
+        players.remove(player.getUniqueId());
     }
 
     @EventHandler
