@@ -173,8 +173,10 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         public void run() {
             int remove = 0;
             if(players.containsKey(sender.getUniqueId()) && players.get(sender.getUniqueId()).opponents.isEmpty()){
-                if(sender.isOnline())
+                if(sender.isOnline()){
                     sender.sendMessage(invite_OverTime);
+                    removeInvites(sender, target);
+                }
                 remove++;
             }
             if(players.containsKey(sender.getUniqueId()) && players.get(sender.getUniqueId()).opponents.isEmpty()){
@@ -190,7 +192,6 @@ public final class PvPInvite extends JavaPlugin implements Listener {
     }
 
     public static void acceptPVP(Player sender, Player target){
-
         players.get(sender.getUniqueId()).addOpponent(target.getUniqueId());
         players.get(target.getUniqueId()).addOpponent(sender.getUniqueId());
     }
@@ -211,10 +212,17 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         }
     }
 
+    public static void removeInvites(Player sender, Player target){
+        //removeInvites  邀請只有目標有
+        players.get(target.getUniqueId()).removeInvites(sender.getUniqueId());
+    }
+
     public static void removePVP(Player sender, Player target){
         //removeOpponent
-        players.get(sender.getUniqueId()).removeOpponent(target.getUniqueId());
-        players.get(target.getUniqueId()).removeOpponent(sender.getUniqueId());
+        if(players.containsKey(sender.getUniqueId()))
+            players.get(sender.getUniqueId()).removeOpponent(target.getUniqueId());
+        if(players.containsKey(target.getUniqueId()))
+            players.get(target.getUniqueId()).removeOpponent(sender.getUniqueId());
     }
 
     private static void EndPVP(Player sender) {

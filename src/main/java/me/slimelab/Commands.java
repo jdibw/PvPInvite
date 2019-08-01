@@ -40,7 +40,7 @@ public class Commands implements CommandExecutor {
                     }
 
                 }else if(args[0].equalsIgnoreCase("Accept")){//Accept
-                    if(pvpInvite.players.get(target.getUniqueId())!=null){
+                    if(pvpInvite.players.get(player.getUniqueId()).invites.contains(target.getUniqueId())){
                         //對方有邀請並且自己目前沒在對戰中
                         String accept = pvpInvite.accept.replaceAll("%player%",target.getDisplayName());
                         String acceptTo = pvpInvite.acceptTo.replaceAll("%player%",player.getDisplayName());
@@ -51,7 +51,7 @@ public class Commands implements CommandExecutor {
                         pvpInvite.acceptPVP(player, target);
                     }
                 }else if(args[0].equalsIgnoreCase("Deny")){//Deny
-                    if(pvpInvite.players.get(target.getUniqueId())!=null){
+                    if(pvpInvite.players.get(player.getUniqueId()).invites.contains(target.getUniqueId())){
                         String deny = pvpInvite.deny.replaceAll("%player%",target.getDisplayName());
                         String denyTo = pvpInvite.denyTo.replaceAll("%player%",player.getDisplayName());
                         target.sendMessage(denyTo);//給邀請者回覆
