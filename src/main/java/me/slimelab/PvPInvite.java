@@ -97,7 +97,6 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                         target.sendMessage(acceptTo.replaceAll("%player%",player.getDisplayName()));
                         player.sendMessage(accept.replaceAll("%player%",target.getDisplayName()));
                         //同意則開始倒數並把接受決鬥的玩家加入
-                        sendStartPVP(player,target);
                         acceptPVP(player, target);
                     }else{
                         send(player,wait_for_accept.replaceAll("%player%", target.getDisplayName()));
@@ -127,11 +126,9 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                 player = (Player) trident.getShooter();
             }
             Player target = (Player) e.getEntity();
-            if(players.get(target.getUniqueId()).opponents.contains(player.getUniqueId()) &&
-                   players.get(player.getUniqueId()).opponents.contains(target.getUniqueId())){
-                //if(target.getHealth()-e.getDamage()<=0){
-                    //EndPVP(target);
-                //}
+            if(players.get(player.getUniqueId()).opponents.contains(target.getUniqueId()) &&
+                    players.get(target.getUniqueId()).opponents.contains(player.getUniqueId())){
+                //雙方接受PVP後可以互相傷害
             }else{
                 e.setCancelled(true);
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(need_invite.replaceAll("%player%", target.getDisplayName())));
@@ -195,7 +192,8 @@ public final class PvPInvite extends JavaPlugin implements Listener {
     }
 
     public static void acceptPVP(Player sender, Player target){
-        removeInvites(target, sender);//同意後移除邀請
+        sendStartPVP(sender,target);
+        removeInvites(target, sender);//同意後移除邀請並在三秒後開始PVP
         Bukkit.getScheduler().runTaskLater(pvpInvite, new Runnable() {
             @Override
             public void run() {
@@ -203,7 +201,6 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                 players.get(target.getUniqueId()).addOpponent(sender.getUniqueId());
             }
         }, 3*20L);
-
     }
 
     public static void sendStartPVP(Player sender, Player target) {
@@ -249,9 +246,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                 if(target.isOnline())
                     target.sendTitle(title[0],title[1],0,100,0);
                 removePVP(sender, target);
-
             }
         }
     }
-
 }

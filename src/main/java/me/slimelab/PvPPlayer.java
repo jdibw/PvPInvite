@@ -28,6 +28,7 @@ public class PvPPlayer {
     public void removeInvites(UUID uuid){
         this.invites.remove(uuid);
     }
+    
     public void setUUID(UUID uuid){
         this.uuid = uuid;
     }
