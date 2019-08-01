@@ -1,7 +1,10 @@
 package me.slimelab;
 
 import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.*;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -17,12 +20,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public final class PvPInvite extends JavaPlugin implements Listener {
 
+    public static PvPPlayer pvpPlayer;
     public static PvPInvite pvpInvite;
-    public static HashMap<UUID, PvPPlayer> invites = new HashMap<>();
+    public static HashMap<UUID, PvPPlayer> players = new HashMap<>();
 
 
     public static String need_invite, wait_for_accept,invite,invite_OverTime,
@@ -60,9 +64,17 @@ public final class PvPInvite extends JavaPlugin implements Listener {
     }
 
     @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event){
+        Player player = event.getPlayer();
+        PvPPlayer pvpPlayer = new PvPPlayer(player.getUniqueId());
+        players.put(player.getUniqueId(), pvpPlayer);
+    }
+
+    @EventHandler
     public void onQuit(PlayerQuitEvent e){
         Player player = e.getPlayer();
         EndPVP(player);
+        players.remove(player.getUniqueId());
     }
 
     @EventHandler
@@ -77,14 +89,15 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         if(e.getDamager() instanceof Player && e.getEntity() instanceof Player){
             Player player = (Player)e.getDamager();
             Player target = (Player)e.getEntity();
-            if(invites.get(player.getUniqueId()) == null){
-                e.setCancelled(true);
+            if(players.get(player.getUniqueId()).opponents.isEmpty()){
                 if(player.isSneaking()){
-                    if(invites.get(player.getUniqueId()).invites.contains(target.getUniqueId())){
+                    e.setCancelled(true);
+                    //if(players.containsKey(target.getUniqueId()) &&
+                    //        players.get(target.getUniqueId()).opponents.contains(player.getUniqueId())){
+                    if(players.get(player.getUniqueId()).invites.contains(target.getUniqueId())){
                         target.sendMessage(acceptTo.replaceAll("%player%",player.getDisplayName()));
                         player.sendMessage(accept.replaceAll("%player%",target.getDisplayName()));
                         //同意則開始倒數並把接受決鬥的玩家加入
-                        sendStartPVP(player,target);
                         acceptPVP(player, target);
                     }else{
                         send(player,wait_for_accept.replaceAll("%player%", target.getDisplayName()));
@@ -94,11 +107,11 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                         invitesPVP(player, target);
                     }
                 }else {
+                    e.setCancelled(true);
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(need_invite.replaceAll("%player%", target.getDisplayName())));
                 }
-            }else if(invites.get(player.getUniqueId()).opponents.contains(target.getUniqueId()) &&
-                    invites.get(target.getUniqueId()).opponents.contains(player.getUniqueId()) &&
-                    invites.get(player.getUniqueId()).pvping && invites.get(target.getUniqueId()).pvping){
+            }else if(players.get(player.getUniqueId()).opponents.contains(target.getUniqueId()) &&
+                    players.get(target.getUniqueId()).opponents.contains(player.getUniqueId())){
                 //雙方接受PVP後可以互相傷害
             }else{
                 e.setCancelled(true);
@@ -114,20 +127,14 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                 player = (Player) trident.getShooter();
             }
             Player target = (Player) e.getEntity();
-            if(invites.get(player.getUniqueId())!=null && invites.get(target.getUniqueId())!=null ){
-                if(invites.get(target.getUniqueId()).opponents.contains(player.getUniqueId()) &&
-                        invites.get(player.getUniqueId()).opponents.contains(target.getUniqueId())){
-                    if(target.getHealth()-e.getDamage()<=0){
-                        EndPVP(target);
-                    }
-                }
+            if(players.get(player.getUniqueId()).opponents.contains(target.getUniqueId()) &&
+                    players.get(target.getUniqueId()).opponents.contains(player.getUniqueId())){
+                //雙方接受PVP後可以互相傷害
             }else{
                 e.setCancelled(true);
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(need_invite.replaceAll("%player%", target.getDisplayName())));
             }
-        }//else{
-        //    e.setCancelled(true);
-        //}
+        }
     }
 
     public static void send(Player player, String onClick, String[] messages) {
@@ -158,40 +165,43 @@ public final class PvPInvite extends JavaPlugin implements Listener {
 
     public static void invitesPVP(Player sender, Player target){
         //invites.get(sender.getUniqueId()).addInvites(target.getUniqueId());
-        invites.get(target.getUniqueId()).addInvites(sender.getUniqueId());
+        players.get(target.getUniqueId()).addInvites(sender.getUniqueId());
         //在受邀請者中加入邀請
         Integer delay = 10;
         //10秒後邀請無效
         Bukkit.getScheduler().runTaskLater(pvpInvite, new Runnable() {
             @Override
-            public void run() {
-                if(!invites.get(sender.getUniqueId()).pvping){
-                    if(sender.isOnline())
-                        sender.sendMessage(invite_OverTime);
+        public void run() {
+            int remove = 0;
+            if(players.containsKey(sender.getUniqueId()) && players.get(sender.getUniqueId()).opponents.isEmpty()){
+                if(sender.isOnline()){
+                    sender.sendMessage(invite_OverTime);
+                    removeInvites(sender, target);
                 }
-                if(!invites.get(sender.getUniqueId()).pvping){
-                    if(target.isOnline())
-                        target.sendMessage(invite_OverTime);
-                }
+                remove++;
             }
-        }, delay*20L);
+            if(players.containsKey(sender.getUniqueId()) && players.get(sender.getUniqueId()).opponents.isEmpty()){
+                if(target.isOnline())
+                    target.sendMessage(invite_OverTime);
+                remove++;
+            }
+            //if(remove > 0){
+            //    removePVP(sender, target);
+            //}//這只是邀請還沒有寫入Opponent不需要removePVP
+        }
+    }, delay*20L);
     }
 
     public static void acceptPVP(Player sender, Player target){
-        invites.get(sender.getUniqueId()).addOpponent(target.getUniqueId());
-        invites.get(sender.getUniqueId()).setPVPing(true);
-        //PvPPlayer pvpPlayer = invites.get(sender.getUniqueId());
-        //pvpPlayer.addOpponent(target.getUniqueId());
-        //pvpPlayer.setPVPing(true);
-        //invites.put(sender.getUniqueId(),pvpPlayer);
-
-        invites.get(target.getUniqueId()).addOpponent(sender.getUniqueId());
-        invites.get(target.getUniqueId()).setPVPing(true);
-        //pvpPlayer = invites.get(target.getUniqueId());
-        //pvpPlayer.addOpponent(sender.getUniqueId());
-        //pvpPlayer.setPVPing(true);
-        //invites.put(target.getUniqueId(),pvpPlayer);
-
+        sendStartPVP(sender,target);
+        removeInvites(target, sender);//同意後移除邀請並在三秒後開始PVP
+        Bukkit.getScheduler().runTaskLater(pvpInvite, new Runnable() {
+            @Override
+            public void run() {
+                players.get(sender.getUniqueId()).addOpponent(target.getUniqueId());
+                players.get(target.getUniqueId()).addOpponent(sender.getUniqueId());
+            }
+        }, 3*20L);
     }
 
     public static void sendStartPVP(Player sender, Player target) {
@@ -210,15 +220,27 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         }
     }
 
+    public static void removeInvites(Player sender, Player target){
+        //removeInvites  只有目標加入邀請人UUID
+        players.get(target.getUniqueId()).removeInvites(sender.getUniqueId());
+    }
+
     public static void removePVP(Player sender, Player target){
-        invites.get(sender.getUniqueId()).removeOpponent(target.getUniqueId());
-        invites.get(target.getUniqueId()).removeOpponent(sender.getUniqueId());
+        //removeOpponent
+        if(players.containsKey(sender.getUniqueId()))
+            players.get(sender.getUniqueId()).removeOpponent(target.getUniqueId());
+        if(players.containsKey(target.getUniqueId()))
+            players.get(target.getUniqueId()).removeOpponent(sender.getUniqueId());
     }
 
     private static void EndPVP(Player sender) {
-        if(invites.get(sender.getUniqueId()).pvping){
-            for(UUID uuid :invites.get(sender.getUniqueId()).opponents){
+        if(!players.get(sender.getUniqueId()).opponents.isEmpty()){
+            //for(UUID uuid : players.get(sender.getUniqueId()).opponents){
+            //上面這寫法不知道為什麼會出現錯誤，先採用下面的
+            for(int i = 0 ; i < players.get(sender.getUniqueId()).opponents.size() ; i++){
+                UUID uuid = players.get(sender.getUniqueId()).opponents.get(i);
                 Player target = Bukkit.getPlayer(uuid);
+                send(sender, target.getDisplayName());
                 String[] title = PvPInvite.pvpEnd.replaceAll("%player%",target.getDisplayName()).split(",");
                 if(sender.isOnline())
                     sender.sendTitle(title[0],title[1],0,100,0);
@@ -228,5 +250,4 @@ public final class PvPInvite extends JavaPlugin implements Listener {
             }
         }
     }
-
 }

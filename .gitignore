@@ -21,8 +21,6 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-.idea/*
-target/*
 .idea/workspace.xml
 .idea/vcs.xml
 .idea/vcs.xml
@@ -68,6 +66,10 @@ src/main/main.iml
 .idea/workspace.xml
 target/maven-archiver/pom.properties
 target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
-.idea/workspace.xml
+target/classes/plugin.yml
+target/maven-archiver/pom.properties
 target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
 *.xml
+src/main/main.iml
+.idea/misc.xml
+.idea/workspace.xml
