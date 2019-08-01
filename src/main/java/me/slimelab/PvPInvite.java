@@ -235,10 +235,8 @@ public final class PvPInvite extends JavaPlugin implements Listener {
 
     private static void EndPVP(Player sender) {
         if(!players.get(sender.getUniqueId()).opponents.isEmpty()){
-            //for(UUID uuid : players.get(sender.getUniqueId()).opponents){
-            //上面這寫法不知道為什麼會出現錯誤，先採用下面的
             for(int i = 0 ; i < players.get(sender.getUniqueId()).opponents.size() ; i++){
-                UUID uuid = players.get(sender.getUniqueId()).opponents.get(i);
+                UUID uuid = players.get(sender.getUniqueId()).opponents.get(0);
                 Player target = Bukkit.getPlayer(uuid);
                 send(sender, target.getDisplayName());
                 String[] title = PvPInvite.pvpEnd.replaceAll("%player%",target.getDisplayName()).split(",");
