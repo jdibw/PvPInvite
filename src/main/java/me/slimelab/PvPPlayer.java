@@ -1,7 +1,5 @@
 package me.slimelab;
 
-import org.bukkit.Bukkit;
-
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -25,12 +23,6 @@ public class PvPPlayer {
 
     public void addInvites(UUID uuid){
         this.invites.add(uuid);
-        Bukkit.getScheduler().runTaskLater(PvPInvite.pvpInvite, new Runnable() {
-            @Override
-            public void run() {
-                removeInvites(uuid);
-            }
-        }, 10*20L);
     }
 
     public void removeInvites(UUID uuid){

@@ -1,7 +1,10 @@
 package me.slimelab;
 
 import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.*;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -17,7 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public final class PvPInvite extends JavaPlugin implements Listener {
 
@@ -126,9 +129,9 @@ public final class PvPInvite extends JavaPlugin implements Listener {
             Player target = (Player) e.getEntity();
             if(players.get(target.getUniqueId()).opponents.contains(player.getUniqueId()) &&
                    players.get(player.getUniqueId()).opponents.contains(target.getUniqueId())){
-                if(target.getHealth()-e.getDamage()<=0){
-                    EndPVP(target);
-                }
+                //if(target.getHealth()-e.getDamage()<=0){
+                    //EndPVP(target);
+                //}
             }else{
                 e.setCancelled(true);
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(need_invite.replaceAll("%player%", target.getDisplayName())));
@@ -192,8 +195,15 @@ public final class PvPInvite extends JavaPlugin implements Listener {
     }
 
     public static void acceptPVP(Player sender, Player target){
-        players.get(sender.getUniqueId()).addOpponent(target.getUniqueId());
-        players.get(target.getUniqueId()).addOpponent(sender.getUniqueId());
+        removeInvites(target, sender);//同意後移除邀請
+        Bukkit.getScheduler().runTaskLater(pvpInvite, new Runnable() {
+            @Override
+            public void run() {
+                players.get(sender.getUniqueId()).addOpponent(target.getUniqueId());
+                players.get(target.getUniqueId()).addOpponent(sender.getUniqueId());
+            }
+        }, 3*20L);
+
     }
 
     public static void sendStartPVP(Player sender, Player target) {
@@ -213,7 +223,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
     }
 
     public static void removeInvites(Player sender, Player target){
-        //removeInvites  邀請只有目標有
+        //removeInvites  只有目標加入邀請人UUID
         players.get(target.getUniqueId()).removeInvites(sender.getUniqueId());
     }
 
@@ -227,14 +237,19 @@ public final class PvPInvite extends JavaPlugin implements Listener {
 
     private static void EndPVP(Player sender) {
         if(!players.get(sender.getUniqueId()).opponents.isEmpty()){
-            for(UUID uuid : players.get(sender.getUniqueId()).opponents){
+            //for(UUID uuid : players.get(sender.getUniqueId()).opponents){
+            //上面這寫法不知道為什麼會出現錯誤，先採用下面的
+            for(int i = 0 ; i < players.get(sender.getUniqueId()).opponents.size() ; i++){
+                UUID uuid = players.get(sender.getUniqueId()).opponents.get(i);
                 Player target = Bukkit.getPlayer(uuid);
+                send(sender, target.getDisplayName());
                 String[] title = PvPInvite.pvpEnd.replaceAll("%player%",target.getDisplayName()).split(",");
                 if(sender.isOnline())
                     sender.sendTitle(title[0],title[1],0,100,0);
                 if(target.isOnline())
                     target.sendTitle(title[0],title[1],0,100,0);
                 removePVP(sender, target);
+
             }
         }
     }
