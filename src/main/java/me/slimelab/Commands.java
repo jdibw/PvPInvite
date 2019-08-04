@@ -54,7 +54,7 @@ public class Commands implements CommandExecutor {
                         target.sendMessage(denyTo);//給邀請者回覆
                         sender.sendMessage(deny);
                         //拒絕則把邀請決鬥的玩家移除
-                        PvPInvite.removeInvites(player, target);
+                        PvPInvite.removeInvites(target, player);
                     }
                 }else{
                     sender.sendMessage(PvPInvite.command);
