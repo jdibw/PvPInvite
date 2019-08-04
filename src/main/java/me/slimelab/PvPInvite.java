@@ -181,8 +181,8 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                 }
                 remove++;
             }
-            if(players.containsKey(target.getUniqueId()) && players.get(target.getUniqueId()).opponents.isEmpty() &&
-                    players.get(target.getUniqueId()).invites.contains(sender.getUniqueId())){
+                if(players.containsKey(sender.getUniqueId()) && players.get(sender.getUniqueId()).opponents.isEmpty() &&
+                        players.get(sender.getUniqueId()).invites.contains(target.getUniqueId())){
                 if(target.isOnline())
                     target.sendMessage(invite_OverTime);
                 remove++;
