@@ -172,20 +172,17 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         Bukkit.getScheduler().runTaskLater(pvpInvite, new Runnable() {
             @Override
         public void run() {
-            int remove = 0;
-            if(players.get(sender.getUniqueId()).opponents.isEmpty() &&
-                    players.get(sender.getUniqueId()).invites.contains(target.getUniqueId())){
-                if(sender.isOnline()){
+            if(players.containsKey(sender.getUniqueId()) && players.get(sender.getUniqueId()).opponents.isEmpty() &&
+                   players.get(sender.getUniqueId()).invites.contains(target.getUniqueId())){
+                if(sender.isOnline())
                     sender.sendMessage(invite_OverTime);
-                    removeInvites(sender, target);
-                }
-                if(target.isOnline()){
-                    target.sendMessage(invite_OverTime);
-                }
             }
-            //if(remove > 0){
-            //    removePVP(sender, target);
-            //}//這只是邀請還沒有寫入Opponent不需要removePVP
+            if(players.containsKey(target.getUniqueId()) && players.get(target.getUniqueId()).opponents.isEmpty() &&
+                   players.get(sender.getUniqueId()).invites.contains(target.getUniqueId())){
+                if(target.isOnline())
+                    target.sendMessage(invite_OverTime);
+            }
+            removeInvites(sender, target);
         }
     }, delay*20L);
     }
