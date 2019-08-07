@@ -19,7 +19,7 @@ public class Commands implements CommandExecutor {
                 sender.sendMessage(PvPInvite.command_Permission);
             }else if(args.length != 2){
                 sender.sendMessage(PvPInvite.command);
-            }else{
+            }else if(sender.hasPermission("PvPInvite.pvp")){
                 Player player = (Player) sender;
                 Player target = (Bukkit.getServer().getPlayer(args[1]));
                 if(args[0].equalsIgnoreCase("Invite")){//Invite
@@ -59,6 +59,8 @@ public class Commands implements CommandExecutor {
                 }else{
                     sender.sendMessage(PvPInvite.command);
                 }
+            }else{
+                sender.sendMessage(PvPInvite.No_Permission);
             }
             return true;
         }

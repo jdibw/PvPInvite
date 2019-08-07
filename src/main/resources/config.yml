@@ -18,3 +18,4 @@
       Command_Permission: "這個指令只能由玩家使用"
       Target_Offline: "目標玩家&b%player%不在線上!"
       Command: "&c指令使用方法: /pvp [Invite|Accept|Deny] [player]"
+      No_Permission: "&c這裡無法進行PVP"
