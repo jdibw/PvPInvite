@@ -92,14 +92,12 @@ public final class PvPInvite extends JavaPlugin implements Listener {
             if(players.get(player.getUniqueId()).opponents.isEmpty()){
                 if(player.isSneaking()){
                     e.setCancelled(true);
-                    //if(players.containsKey(target.getUniqueId()) &&
-                    //        players.get(target.getUniqueId()).opponents.contains(player.getUniqueId())){
                     if(players.get(player.getUniqueId()).invites.contains(target.getUniqueId())){
                         target.sendMessage(acceptTo.replaceAll("%player%",player.getDisplayName()));
                         player.sendMessage(accept.replaceAll("%player%",target.getDisplayName()));
                         //同意則開始倒數並把接受決鬥的玩家加入
                         acceptPVP(player, target);
-                    }else{
+                    }else if(!players.get(target.getUniqueId()).invites.contains(player.getUniqueId())){
                         send(player,wait_for_accept.replaceAll("%player%", target.getDisplayName()));
                         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(wait_for_accept.replaceAll("%player%", target.getDisplayName())));
                         send(target, invite.replaceAll("%player%", player.getDisplayName()).split("%NEWLINE%"));
