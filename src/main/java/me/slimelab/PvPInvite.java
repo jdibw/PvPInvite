@@ -107,7 +107,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                     }
                 }else {
                     e.setCancelled(true);
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(need_invite.replaceAll("%player%", target.getDisplayName())));
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(need_invite));
                 }
             }else if(players.get(player.getUniqueId()).opponents.contains(target.getUniqueId()) &&
                     players.get(target.getUniqueId()).opponents.contains(player.getUniqueId())){
@@ -128,7 +128,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
             Player target = (Player) e.getEntity();
             if(players.get(player.getUniqueId()).opponents.isEmpty() && players.get(target.getUniqueId()) != null){
                 e.setCancelled(true);
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(need_invite.replaceAll("%player%", target.getDisplayName())));
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(need_invite));
             }else if(players.get(player.getUniqueId()).opponents.contains(target.getUniqueId()) &&
                     players.get(target.getUniqueId()).opponents.contains(player.getUniqueId())){
                 //雙方接受PVP後可以互相傷害
