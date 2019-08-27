@@ -90,7 +90,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         if(e.getDamager() instanceof Player && e.getEntity() instanceof Player){
             Player player = (Player)e.getDamager();
             Player target = (Player)e.getEntity();
-            if(players.get(player.getUniqueId()).opponents.isEmpty() && players.get(target) != null){
+            if(players.get(player.getUniqueId()).opponents.isEmpty() && players.get(target.getUniqueId()) != null){
                 if(player.isSneaking()){
                     e.setCancelled(true);
                     if(players.get(player.getUniqueId()).invites.contains(target.getUniqueId())){
@@ -126,7 +126,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                 player = (Player) trident.getShooter();
             }
             Player target = (Player) e.getEntity();
-            if(players.get(player.getUniqueId()).opponents.isEmpty() && players.get(target) != null){
+            if(players.get(player.getUniqueId()).opponents.isEmpty() && players.get(target.getUniqueId()) != null){
                 e.setCancelled(true);
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(need_invite.replaceAll("%player%", target.getDisplayName())));
             }else if(players.get(player.getUniqueId()).opponents.contains(target.getUniqueId()) &&
