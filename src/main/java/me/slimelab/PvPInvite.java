@@ -6,9 +6,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Trident;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -86,7 +84,6 @@ public final class PvPInvite extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onHit(EntityDamageByEntityEvent e){
-
         if(e.getDamager() instanceof Player && e.getEntity() instanceof Player){
             Player player = (Player)e.getDamager();
             Player target = (Player)e.getEntity();
@@ -124,6 +121,23 @@ public final class PvPInvite extends JavaPlugin implements Listener {
             }else if(e.getDamager() instanceof Trident){
                 Trident trident = (Trident) e.getDamager();
                 player = (Player) trident.getShooter();
+            }
+            Player target = (Player) e.getEntity();
+            if(players.get(player.getUniqueId()).opponents.isEmpty() && players.get(target.getUniqueId()) != null){
+                e.setCancelled(true);
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(need_invite));
+            }else if(players.get(player.getUniqueId()).opponents.contains(target.getUniqueId()) &&
+                    players.get(target.getUniqueId()).opponents.contains(player.getUniqueId())){
+                //雙方接受PVP後可以互相傷害
+            }else{
+                e.setCancelled(true);
+            }
+        }else if(e.getDamager() instanceof Projectile
+                && e.getEntity() instanceof Player){
+            Player player = null;
+            if(e.getDamager() instanceof Projectile){
+                Projectile projectile = (Projectile) e.getDamager();
+                player = (Player) projectile.getShooter();
             }
             Player target = (Player) e.getEntity();
             if(players.get(player.getUniqueId()).opponents.isEmpty() && players.get(target.getUniqueId()) != null){
