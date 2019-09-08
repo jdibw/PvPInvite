@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -80,6 +81,19 @@ public final class PvPInvite extends JavaPlugin implements Listener {
     public void onDeath(PlayerDeathEvent e){
         Player player = e.getEntity();
         EndPVP(player);
+    }
+
+    @EventHandler
+    public void onHit(PlayerFishEvent e){
+        if(e.getPlayer() instanceof Player && e.getCaught() instanceof Player){
+            Player player = (Player)e.getPlayer();
+            Player target = (Player)e.getCaught();
+            if(players.get(player.getUniqueId()).opponents.contains(target.getUniqueId()) &&
+                    players.get(target.getUniqueId()).opponents.contains(player.getUniqueId())){
+                //雙方接受PVP後可以互相傷害
+                e.setCancelled(true);
+            }
+        }
     }
 
     @EventHandler
