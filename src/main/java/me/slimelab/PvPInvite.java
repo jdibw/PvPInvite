@@ -6,16 +6,15 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerFishEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -84,13 +83,12 @@ public final class PvPInvite extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onHit(PlayerFishEvent e){
-        if(e.getPlayer() instanceof Player && e.getCaught() instanceof Player){
+    public void onFishing(PlayerInteractEvent e){
+        if(e.getAction().equals(Action.RIGHT_CLICK_AIR) &&
+            e.getMaterial() == Material.FISHING_ROD){
             Player player = (Player)e.getPlayer();
-            Player target = (Player)e.getCaught();
-            if(players.get(player.getUniqueId()).opponents.contains(target.getUniqueId()) &&
-                    players.get(target.getUniqueId()).opponents.contains(player.getUniqueId())){
-                //雙方接受PVP後可以互相傷害
+
+            if(players.get(player.getUniqueId()).opponents.size()>0){
                 e.setCancelled(true);
             }
         }
