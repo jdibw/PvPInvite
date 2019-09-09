@@ -87,7 +87,6 @@ public final class PvPInvite extends JavaPlugin implements Listener {
         if(e.getAction().equals(Action.RIGHT_CLICK_AIR) &&
             e.getMaterial() == Material.FISHING_ROD){
             Player player = (Player)e.getPlayer();
-
             if(players.get(player.getUniqueId()).opponents.size()>0){
                 e.setCancelled(true);
             }
