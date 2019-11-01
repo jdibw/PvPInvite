@@ -128,10 +128,12 @@ public final class PvPInvite extends JavaPlugin implements Listener {
             Player player = null;
             if(e.getDamager() instanceof Arrow){
                 Arrow arrow = (Arrow) e.getDamager();
-                player = (Player) arrow.getShooter();
+                if(arrow.getShooter() instanceof Player)
+                    player = (Player) arrow.getShooter();
             }else if(e.getDamager() instanceof Trident){
                 Trident trident = (Trident) e.getDamager();
-                player = (Player) trident.getShooter();
+                if(trident.getShooter() instanceof Player)
+                    player = (Player) trident.getShooter();
             }
             Player target = (Player) e.getEntity();
             if(players.get(player.getUniqueId()).opponents.isEmpty() && players.get(target.getUniqueId()) != null){
