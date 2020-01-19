@@ -152,9 +152,8 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                 Projectile projectile = (Projectile) e.getDamager();
                 player = (Player) projectile.getShooter();
             }
-
-            if(e.getDamager() instanceof EnderPearl) return;//終界珍珠
-
+            if(e.getDamager() instanceof EnderPearl) return;//投擲終界珍珠
+            
             Player target = (Player) e.getEntity();
             if(players.get(player.getUniqueId()).opponents.isEmpty() && players.get(target.getUniqueId()) != null){
                 e.setCancelled(true);
