@@ -136,14 +136,14 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                     player = (Player) trident.getShooter();
             }
             if(player == null) return;
-            Player target = (Player) e.getEntity();
-            if(players.get(player.getUniqueId()).opponents.isEmpty() && players.get(target.getUniqueId()) != null){
-                e.setCancelled(true);
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(need_invite));
-            }else if(players.get(player.getUniqueId()).opponents.contains(target.getUniqueId()) &&
-                    players.get(target.getUniqueId()).opponents.contains(player.getUniqueId())){
-                //雙方接受PVP後可以互相傷害
-            }else{
+                Player target = (Player) e.getEntity();
+                if(players.get(player.getUniqueId()).opponents.isEmpty() && players.get(target.getUniqueId()) != null){
+                    e.setCancelled(true);
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(need_invite));
+                }else if(players.get(player.getUniqueId()).opponents.contains(target.getUniqueId()) &&
+                        players.get(target.getUniqueId()).opponents.contains(player.getUniqueId())){
+                    //雙方接受PVP後可以互相傷害
+                }else{
                 e.setCancelled(true);
             }
         }else if(e.getDamager() instanceof Projectile
@@ -154,7 +154,9 @@ public final class PvPInvite extends JavaPlugin implements Listener {
                 if(!(projectile.getShooter() instanceof Player)) return;;
                 player = (Player) projectile.getShooter();
             }
-            if(e.getDamager() instanceof EnderPearl) return;//投擲終界珍珠
+
+            if(e.getDamager() instanceof EnderPearl)
+                return;//投擲終界珍珠無傷
 
             Player target = (Player) e.getEntity();
             if(players.get(player.getUniqueId()).opponents.isEmpty() && players.get(target.getUniqueId()) != null){
@@ -267,6 +269,7 @@ public final class PvPInvite extends JavaPlugin implements Listener {
     }
 
     private static void EndPVP(Player sender) {
+        if(players.get(sender.getUniqueId())==null) return;
         if(!players.get(sender.getUniqueId()).opponents.isEmpty()){
             for(int i = 0 ; i < players.get(sender.getUniqueId()).opponents.size() ; i++){
                 UUID uuid = players.get(sender.getUniqueId()).opponents.get(0);
